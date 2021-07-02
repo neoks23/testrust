@@ -10,6 +10,8 @@ pub struct Bliep {
     pub jump_height: f32,
     jumping: bool,
     velocity: Vector2,
+    #[property]
+    has_key: bool,
 }
 
 #[gdnative::methods]
@@ -23,6 +25,7 @@ impl Bliep {
             jump_height: 400.0,
             jumping: false,
             velocity: Vector2::new(0.0, 0.0),
+            has_key: false,
         }
     }
 
@@ -95,5 +98,9 @@ impl Bliep {
             45.0,
             true,
         );
+
+        if self.has_key {
+            godot_print!("I HAZ KEY!");
+        }
     }
 }
