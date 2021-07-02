@@ -9,9 +9,14 @@ use crate::bliep;
 pub struct Key {
     float_var: f32,
     frame: f32,
+    #[property]
     float_speed: f32,
+    #[property]
     float_step: f32,
+    #[property]
     float_boundaries: f32,
+    #[property]
+    xydir: bool,
     idir: bool,
     dir: bool,
 }
@@ -25,6 +30,7 @@ impl Key {
             float_speed: 700.0,
             float_step: 0.5,
             float_boundaries: 6.0,
+            xydir: false,
             idir: true,
             dir: true,
         }
@@ -32,7 +38,6 @@ impl Key {
 
     #[export]
     fn _ready(&mut self, _owner: &Area2D) {
-        godot_print!("KEYYY.");
         self.idir = true;
     }
 
@@ -55,9 +60,17 @@ impl Key {
         );
 
         if self.dir {
-            sprite.set_position(Vector2::new(0.0, self.float_var));
+            if !self.xydir {
+                sprite.set_position(Vector2::new(0.0, self.float_var));
+            } else {
+                sprite.set_position(Vector2::new(self.float_var, 0.0));
+            }
         } else {
-            sprite.set_position(Vector2::new(0.0, -self.float_var));
+            if !self.xydir {
+                sprite.set_position(Vector2::new(0.0, -self.float_var));
+            } else {
+                sprite.set_position(Vector2::new(-self.float_var, 0.0));
+            }
         }
         if self.idir {
             self.frame = self.frame + self.float_step;
@@ -117,12 +130,10 @@ impl Key {
 
     #[export]
     fn _on_key_body_entered(&mut self, _owner: &Area2D, body: Ref<Node>) {
-        godot_print!("something touchy touchy");
-        let area = unsafe { body.assume_safe() };
+        let body = unsafe { body.assume_safe() };
 
-        if area.name() == GodotString::from_str("Bliep") {
-            godot_print!("it was bliep!");
-            area.set(GodotString::from_str("has_key"), true);
+        if body.name() == GodotString::from_str("Bliep") {
+            body.set(GodotString::from_str("has_key"), true);
             _owner.queue_free();
         }
     }

@@ -3,10 +3,15 @@ use gdnative::prelude::*;
 #[derive(NativeClass)]
 #[inherit(KinematicBody2D)]
 pub struct Bliep {
+    #[property]
     pub speed: f32,
+    #[property]
     pub max_speed: f32,
+    #[property]
     pub acceleration: f32,
+    #[property]
     pub gravity: f32,
+    #[property]
     pub jump_height: f32,
     jumping: bool,
     velocity: Vector2,
@@ -98,9 +103,5 @@ impl Bliep {
             45.0,
             true,
         );
-
-        if self.has_key {
-            godot_print!("I HAZ KEY!");
-        }
     }
 }
